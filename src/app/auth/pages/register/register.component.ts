@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -8,22 +11,34 @@ import { Router } from '@angular/router';
   styles: [
   ]
 })
-export class RegisterComponent  {
+export class RegisterComponent {
 
-  miFormulario:FormGroup = this.fb.group({
-    email: ['test4@test.com', [Validators.required, Validators.email]],
-    name: ['Test 4', [Validators.required ]],
-    password: ['123456', [Validators.required,Validators.minLength(6) ]],
-  }); 
+  miFormulario: FormGroup = this.fb.group({
+    name:     ['Test 4', [ Validators.required ]],
+    email:    ['test4@test.com', [ Validators.required, Validators.email ]],
+    password: ['123456', [ Validators.required, Validators.minLength(6) ]],
+  });
 
-  constructor(private fb: FormBuilder,
-              private router:Router) { }
+  constructor( private fb: FormBuilder,
+               private router: Router,
+               private authService: AuthService ) { }
 
-  register(){
-    console.log(this.miFormulario.value);
-    //console.log(this.miFormulario.valid);
-    this.router.navigateByUrl('/dashboard')
+
+  registro() {
+    const { name, email, password } = this.miFormulario.value;
+
+    this.authService.registro( name, email, password )
+      .subscribe( ok => {
+
+        if ( ok === true ) {
+          this.router.navigateByUrl('/dashboard');
+        } else {
+          Swal.fire('Error', ok, 'error');
+        }
+      });
+
   }
 
-  
+
+
 }

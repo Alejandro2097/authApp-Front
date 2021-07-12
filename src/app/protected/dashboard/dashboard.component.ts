@@ -7,22 +7,27 @@ import { AuthService } from '../../auth/services/auth.service';
   templateUrl: './dashboard.component.html',
   styles: [
     `
-    *{
-      margin: 15px;
-    }
+      * {
+        margin: 15px;
+      }
     `
   ]
 })
-export class DashboardComponent   {
+export class DashboardComponent {
 
-  get usuario(){
+  get usuario() {
     return this.authService.usuario;
   }
 
-  constructor(private router: Router,
-              private authService:AuthService) { }
 
-  logout(){
-    this.router.navigateByUrl('/auth/')
+  constructor( private router: Router,
+               private authService: AuthService ) { }
+
+  logout() {
+
+    this.router.navigateByUrl('/auth');
+    this.authService.logout();
+
   }
+
 }
